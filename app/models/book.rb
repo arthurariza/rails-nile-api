@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
 class Book < ApplicationRecord
-  validates :author, :title, presence: true, length: { minimum: 3 }
+  belongs_to :author
+
+  validates :title, presence: true, length: { minimum: 3 }
 end
