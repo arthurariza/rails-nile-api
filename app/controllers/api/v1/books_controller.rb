@@ -4,7 +4,9 @@ module Api
   module V1
     class BooksController < ApplicationController
       def index
-        render json: { Books: Book.all }
+        books = Book.includes(:author)
+
+        render json: { Books: BooksSerializer.new(books).to_json }
       end
 
       def create
