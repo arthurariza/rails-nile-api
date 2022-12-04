@@ -6,10 +6,12 @@ describe 'Books API', type: :request do
   let(:author) { FactoryBot.create(:author) }
 
   describe 'GET /books' do
-    it 'returns all the books' do
+    before do
       FactoryBot.create(:book, title: '1984', author:)
       FactoryBot.create(:book, title: 'The Time Machine', author:)
+    end
 
+    it 'returns all the books' do
       get '/api/v1/books'
 
       resp_body = JSON.parse(response.body)
@@ -30,6 +32,34 @@ describe 'Books API', type: :request do
                                            'author_age' => 25
                                          }
                                        ])
+    end
+
+    context 'when pagination is applied' do
+      it 'returns a subset of books based on the limit' do
+        get '/api/v1/books', params: { limit: 1, offset: 1 }
+
+        resp_body = JSON.parse(response.body)
+
+        expect(response).to have_http_status(:success)
+        expect(resp_body['Books'].size).to eq(1)
+        expect(resp_body['Books']).to eq([
+                                           {
+                                             'id' => 2,
+                                             'title' => 'The Time Machine',
+                                             'author_name' => 'Author One',
+                                             'author_age' => 25
+                                           }
+                                         ])
+      end
+
+      it 'returns a subset of books based on the limit and offset' do
+        get '/api/v1/books', params: { limit: 1 }
+
+        resp_body = JSON.parse(response.body)
+
+        expect(response).to have_http_status(:success)
+        expect(resp_body['Books'].size).to eq(1)
+      end
     end
   end
 
