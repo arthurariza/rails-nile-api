@@ -12,8 +12,24 @@ describe 'Books API', type: :request do
 
       get '/api/v1/books'
 
+      resp_body = JSON.parse(response.body)
+
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body)['Books'].size).to eq(2)
+      expect(resp_body['Books'].size).to eq(2)
+      expect(resp_body['Books']).to eq([
+                                         {
+                                           'id' => 1,
+                                           'title' => '1984',
+                                           'author_name' => 'Author One',
+                                           'author_age' => 25
+                                         },
+                                         {
+                                           'id' => 2,
+                                           'title' => 'The Time Machine',
+                                           'author_name' => 'Author One',
+                                           'author_age' => 25
+                                         }
+                                       ])
     end
   end
 
@@ -27,8 +43,18 @@ describe 'Books API', type: :request do
         post '/api/v1/books', params: { book:, author: }
       end.to change { Book.count }.from(0).to(1)
 
+      resp_body = JSON.parse(response.body)
+
       expect(response).to have_http_status(:created)
       expect(Author.count).to eq(1)
+      expect(resp_body).to eq(
+        {
+          'id' => 1,
+          'title' => '1984',
+          'author_name' => 'George Orwel',
+          'author_age' => 50
+        }
+      )
     end
 
     it 'returns unprocessable_entity when validation fails' do

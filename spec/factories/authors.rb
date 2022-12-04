@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :author do
-    first_name { "MyString" }
-    last_name { "MyString" }
-    age { 1 }
+    first_name { 'Author' }
+    last_name { 'One' }
+    age { 25 }
   end
 end

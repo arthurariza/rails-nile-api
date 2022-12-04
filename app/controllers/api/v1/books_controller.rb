@@ -14,7 +14,7 @@ module Api
         book = author.books.new(book_params)
 
         if book.save
-          render json: book, status: :created
+          render json: BookSerializer.new(book).to_json, status: :created
         else
           render json: book.errors, status: :unprocessable_entity
         end
