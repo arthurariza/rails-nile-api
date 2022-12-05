@@ -6,7 +6,7 @@ module Api
       MAX_PAGINATION_LIMIT = 100
 
       def index
-        books = Book.includes(:author).limit(limit).offset(params[:offset])
+        books = Book.limit(limit).offset(params[:offset]).includes(:author)
 
         render json: { Books: BooksSerializer.new(books).to_json }
       end
