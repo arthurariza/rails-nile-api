@@ -16,6 +16,7 @@ module Api
         book = author.books.new(book_params)
 
         if book.save
+          UpdateSkuJob.perform_later(params[:book][:title])
           render json: BookSerializer.new(book).to_json, status: :created
         else
           render json: book.errors, status: :unprocessable_entity
